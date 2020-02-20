@@ -1,6 +1,8 @@
 using namespace std;
 
 #include <set>
+#include <vector>
+#include <fstream>
 
 typedef struct Book
 {
@@ -14,8 +16,6 @@ public:
     Library()
     {
     }
-
-private:
     set<Book *> books;
     int id;
     int setupTime;
@@ -68,6 +68,14 @@ private:
     }
 };
 
+class SolutionLibrary
+{
+public:
+    int id;
+    int numBooksToScan;
+    vector<int> bookIDs;
+};
+
 class Evaluator
 {
 public:
@@ -76,17 +84,67 @@ public:
     int numDays;
     float alpha, beta, gamma;
     int lambda;
-    Evaluator(float alpha, float beta, float gamma, int lambda)
+    Evaluator(set<Library *> libraries, float alpha, float beta, float gamma, int lambda)
     {
+        this->libraries = libraries;
         this->alpha = alpha;
         this->beta = beta;
         this->gamma = gamma;
         this->lambda = lambda;
     }
+
+    vector<Library *> eval()
+    {
+        for (Library *lib : this->libraries)
+        {
+            lib->calcAvgBookValue(set<Book *>());
+        }
+        vector<Library *> solutionLibraries;
+        // Optimize later 1
+        while (this->numDays)
+        {
+            float maxScore = 0;
+            Library *bestLibrary;
+            for (auto it = this->libraries.begin(); it != this->libraries.end(); it++)
+            {
+                Library *lib = *it;
+                float score = lib->evalScore(this->alpha, this->beta, this->gamma);
+                if (score > maxScore)
+                {
+                    maxScore = score;
+                    bestLibrary = lib;
+                    this->libraries.erase(it);
+                }
+            }
+            // Create solution library object  /// just a library for now fam
+            solutionLibraries.push_back(bestLibrary);
+            // Add it to vector
+        }
+        return solutionLibraries;
+    };
 };
+
+void parseOutput(vector<Library *> libraries)
+{
+    ofstream solution;
+    solution.open("solution.txt");
+    solution << libraries.size() << "\n";
+    for (Library *lib : libraries)
+    {
+        vector<Book *> mistakesWereMade(lib->books.begin(), lib->books.end());
+        sort(mistakesWereMade.begin(), mistakesWereMade.end());
+        solution << lib->id << " " << lib->books.size() << "\n";
+        for (Book *book : mistakesWereMade)
+        {
+            solution << book->id << " ";
+        }
+        solution << "\n";
+    }
+    solution.close();
+}
 
 int main()
 {
-
+    parseOutput(vector<Library *>());
     return 0;
 }
