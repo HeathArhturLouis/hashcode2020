@@ -68,7 +68,25 @@ private:
     }
 };
 
+class Evaluator
+{
+public:
+    set<Library *> libraries;
+    set<Book *> usedBooks;
+    int numDays;
+    float alpha, beta, gamma;
+    int lambda;
+    Evaluator(float alpha, float beta, float gamma, int lambda)
+    {
+        this->alpha = alpha;
+        this->beta = beta;
+        this->gamma = gamma;
+        this->lambda = lambda;
+    }
+};
+
 int main()
 {
+
     return 0;
 }
