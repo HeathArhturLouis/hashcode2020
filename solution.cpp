@@ -111,7 +111,7 @@ public:
         }
 
         set<Library *> libraries;
-        set<Book *> books_local;
+
         // start reading the libraries
         int no_books_in_lib;
 
@@ -122,13 +122,15 @@ public:
             in_file >> one_lib->setupTime;
             in_file >> one_lib->numBooksPerDay;
 
+            set<Book *> books_local;
             for (int j = 0; j < no_books_in_lib; j++)
             {
                 Book *one_book = new Book();
-                one_book->id = j;
-                one_book->score = book_scores[j];
+                in_file >> one_book->id;
+                one_book->score = book_scores[one_book->id];
                 books_local.insert(one_book);
             }
+
             one_lib->books = books_local;
             //where save the books
             libraries.insert(one_lib);
