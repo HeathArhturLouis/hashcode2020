@@ -1,13 +1,15 @@
-using namespace std;
 #include <set>
 #include <vector>
 #include <fstream>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
-int no_books;
-int no_libraries;
-int no_days;
+using namespace std;
+
+double no_books;
+double no_libraries;
+double no_days;
 ofstream out_file;
 ifstream in_file;
 
