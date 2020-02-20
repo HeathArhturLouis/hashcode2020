@@ -166,7 +166,7 @@ public:
         }
         vector<Library *> solutionLibraries;
         // Optimize later 1
-        while (this->numDays)
+        while (this->libraries.size())
         {
             float maxScore = 0;
             Library *bestLibrary;
@@ -178,15 +178,16 @@ public:
                 {
                     maxScore = score;
                     bestLibrary = lib;
-                    this->libraries.erase(it);
                 }
             }
-            // Create solution library object  /// just a library for now fam
             solutionLibraries.push_back(bestLibrary);
-            // Add it to vector
+            this->libraries.erase(bestLibrary);
         }
+        // Create solution library object  /// just a library for now fam
+
+        // Add it to vector
         return solutionLibraries;
-    };
+    }
 };
 
 void parseOutput(vector<Library *> libraries)
@@ -216,15 +217,9 @@ int main()
 
     set<Library *> libraries = rinput->readBookScoresAndLibraries();
     Evaluator *eval = new Evaluator(libraries, 1.0, 1.0, 1.0, 1);
+    eval->numDays = 20;
     vector<Library *> libs(eval->libraries.begin(), eval->libraries.end());
-    for (auto lib : libs)
-    {
-        for (auto b : lib->books)
-        {
-            cout << b->score << "\n";
-        }
-    }
-    parseOutput(libs);
+    parseOutput(eval->eval());
 
     return 0;
 }
