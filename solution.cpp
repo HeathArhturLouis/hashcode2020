@@ -89,7 +89,7 @@ class ReadInput
 public:
     void start_files()
     {
-        in_file.open("a_ex.in");
+        in_file.open("b_read_on.txt");
     }
 
     set<Library *> readBookScoresAndLibraries()
@@ -219,7 +219,7 @@ int main()
     Evaluator *eval = new Evaluator(libraries, 1.0, 1.0, 1.0, 1);
     eval->numDays = 20;
     vector<Library *> libs(eval->libraries.begin(), eval->libraries.end());
-    parseOutput(eval->eval());
+    parseOutput(libs);
 
     return 0;
 }
