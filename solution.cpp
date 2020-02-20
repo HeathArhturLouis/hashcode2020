@@ -1,8 +1,15 @@
 using namespace std;
-
 #include <set>
 #include <vector>
 #include <fstream>
+#include <fstream>
+#include <iostream>
+
+int no_books;
+int no_libraries;
+int no_days;
+ofstream out_file;
+ifstream in_file;
 
 typedef struct Book
 {
@@ -76,6 +83,62 @@ public:
     vector<int> bookIDs;
 };
 
+class ReadInput
+{
+
+public:
+    void start_files()
+    {
+        in_file.open("a_ex.in");
+    }
+
+    set<Library *> readBookScoresAndLibraries()
+    {
+
+        in_file >> no_books;
+        in_file >> no_libraries;
+        in_file >> no_days;
+
+        // read the books score
+
+        vector<int> book_scores;
+
+        int temp;
+        for (int i = 0; i < no_books; i++)
+        {
+            in_file >> temp;
+            book_scores.push_back(temp);
+        }
+
+        set<Library *> libraries;
+        set<Book *> books_local;
+        // start reading the libraries
+        int no_books_in_lib;
+
+        for (int i = 0; i < no_libraries; i++)
+        {
+            Library *one_lib = new Library();
+            in_file >> no_books_in_lib;
+            in_file >> one_lib->setupTime;
+            in_file >> one_lib->numBooksPerDay;
+
+            for (int j = 0; j < no_books_in_lib; j++)
+            {
+                Book *one_book = new Book();
+                one_book->id = j;
+                one_book->score = book_scores[j];
+                books_local.insert(one_book);
+            }
+            one_lib->books = books_local;
+            //where save the books
+            libraries.insert(one_lib);
+        }
+
+        //check if librarie sprint something
+
+        return libraries;
+    }
+};
 class Evaluator
 {
 public:
@@ -146,5 +209,20 @@ void parseOutput(vector<Library *> libraries)
 int main()
 {
     parseOutput(vector<Library *>());
+    ReadInput *rinput = new ReadInput();
+    rinput->start_files();
+
+    set<Library *> libraries = rinput->readBookScoresAndLibraries();
+    Evaluator *eval = new Evaluator(libraries, 1.0, 1.0, 1.0, 1);
+    vector<Library *> libs(eval->libraries.begin(), eval->libraries.end());
+    for (auto lib : libs)
+    {
+        for (auto b : lib->books)
+        {
+            cout << b->score << "\n";
+        }
+    }
+    parseOutput(libs);
+
     return 0;
 }
